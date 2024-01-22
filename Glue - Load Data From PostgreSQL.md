@@ -6,7 +6,7 @@ Assume that we have a sample PostgreSQL DB with three tables:
 - Customers
 - Employees
 
-[Northwind Create Script - northwind_db_create_script.sql](/Data%20Lakehouse/Iceberg/AWS/Test%201/northwind_db_create_script.sql)
+[Northwind Create Script - northwind_db_create_script.sql](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/northwind_db_create_script.sql)
 
 ## Step 1: Glue Job - Load PostgreSQL tables into S3 bucket
 
@@ -49,13 +49,13 @@ employees_pd.to_parquet(s3_path + "employees.parquet")
 job.commit()
 ```
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/load_from_postgresql.png)
+![](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/load_from_postgresql.png)
 
 ## Step 2: Create a new database in Glue Data Catalog
 
 <kbd>Glue</kbd> > <kbd>Data Catalog</kbd> > <kbd>Databases</kbd> > <kbd>Create a database</kbd>
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/glue_create_database.png)
+![](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/glue_create_database.png)
 
 ## Step 3: Create a crawler for the files loaded from PostgreSQL
 
@@ -63,13 +63,13 @@ job.commit()
 
 ### Set crawler properties
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_1.png)
+![](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/crawler_1.png)
 
 ### Choose data sources and classifiers
 
 <kbd>Data sources</kbd> > <kbd>Add data source</kbd>
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_2.png)
+![](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/crawler_2.png)
 
 ### Configure security settings
 
@@ -78,7 +78,7 @@ job.commit()
 
 ### Set output and scheduling
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_3.png)
+![](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/crawler_3.png)
 
 ### Review and create
 
@@ -129,7 +129,7 @@ After ingested files into S3 bucket and crawled the loaded files, three new tabl
 
 <kbd>AWS Glue</kbd> > <kbd>Databases</kbd> > <kbd>test-iceberg-db</kbd>
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_4.png)
+![](https://github.com/talhaturan/iceberg/blob/95e733da9575afb69716905632922df922601582/crawler_4.png)
 
 ## Step 7: Glue Job - Create Iceberg Tables
 
