@@ -6,7 +6,7 @@ Assume that we have a sample PostgreSQL DB with three tables:
 - Customers
 - Employees
 
-[Northwind Create Script - northwind_db_create_script.sql](/Data%20Lakehouse/Iceberg/AWS/Test%201/scripts/northwind_db_create_script.sql)
+[Northwind Create Script - northwind_db_create_script.sql](/Data%20Lakehouse/Iceberg/AWS/Test%201/northwind_db_create_script.sql)
 
 ## Step 1: Glue Job - Load PostgreSQL tables into S3 bucket
 
@@ -29,18 +29,14 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
 
-db_url = "jdbc:postgresql://tt-db-postgres.cbvosdvtdn63.eu-central-1.rds.amazonaws.com/iceberg_test"
+db_url = "jdbc:postgresql://XXX.rds.amazonaws.com/iceberg_test"
 db_user = "postgres"
 db_password = "Admin123"
-s3_path = "s3://tt-bucket-001/postgresql-source-files/"
+s3_path = "s3://XXX/postgresql-source-files/"
 
 orders_df = spark.read.format("jdbc").option("url",db_url).option("user", db_user).option("password", db_password).option("dbtable","orders").load()
 customers_df = spark.read.format("jdbc").option("url",db_url).option("user", db_user).option("password", db_password).option("dbtable","customers").load()
 employees_df = spark.read.format("jdbc").option("url",db_url).option("user", db_user).option("password", db_password).option("dbtable","employees").load()
-
-# orders_parquet = glueContext.write_dynamic_frame.from_options(frame = dynamic_dframe, connection_type = "s3", connection_options = {"path": "s3://mybucket/outfiles"}, format = "csv", transformation_ctx = "datasink4")
-
-# orders_df.write.format("parquet").mode("overwrite").save(s3_path)
 
 orders_pd = orders_df.toPandas()
 customers_pd = customers_df.toPandas()
@@ -53,13 +49,13 @@ employees_pd.to_parquet(s3_path + "employees.parquet")
 job.commit()
 ```
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/load_from_postgresql.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/load_from_postgresql.png)
 
 ## Step 2: Create a new database in Glue Data Catalog
 
 <kbd>Glue</kbd> > <kbd>Data Catalog</kbd> > <kbd>Databases</kbd> > <kbd>Create a database</kbd>
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/glue_create_database.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/glue_create_database.png)
 
 ## Step 3: Create a crawler for the files loaded from PostgreSQL
 
@@ -67,13 +63,13 @@ job.commit()
 
 ### Set crawler properties
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/crawler_1.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_1.png)
 
 ### Choose data sources and classifiers
 
 <kbd>Data sources</kbd> > <kbd>Add data source</kbd>
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/crawler_2.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_2.png)
 
 ### Configure security settings
 
@@ -82,7 +78,7 @@ job.commit()
 
 ### Set output and scheduling
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/crawler_3.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_3.png)
 
 ### Review and create
 
@@ -133,7 +129,7 @@ After ingested files into S3 bucket and crawled the loaded files, three new tabl
 
 <kbd>AWS Glue</kbd> > <kbd>Databases</kbd> > <kbd>test-iceberg-db</kbd>
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/crawler_4.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/crawler_4.png)
 
 ## Step 7: Glue Job - Create Iceberg Tables
 
@@ -175,7 +171,7 @@ spark = glueContext.spark_session
 job = Job(glueContext)
 job.init(args['JOB_NAME'], args)
 
-warehouse_path = "s3://tt-bucket-001/test-warehouse/"
+warehouse_path = "s3://XXX/test-warehouse/"
 
 pg_orders_df = glueContext.create_dynamic_frame.from_catalog(database="test_iceberg_db", table_name="postgre_orders").toDF()
 pg_customers_df = glueContext.create_dynamic_frame.from_catalog(database="test_iceberg_db", table_name="postgre_customers").toDF()
@@ -211,4 +207,4 @@ job.commit()
 
 ## Step 7: Check Iceberg table file structure
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/img/file_structure.png)
+![](/Data%20Lakehouse/Iceberg/AWS/Test%201/file_structure.png)
