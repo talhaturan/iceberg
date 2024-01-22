@@ -207,4 +207,4 @@ job.commit()
 
 ## Step 7: Check Iceberg table file structure
 
-![](/Data%20Lakehouse/Iceberg/AWS/Test%201/file_structure.png)
+![](https://github.com/talhaturan/iceberg/blob/fbf98a496a8b47fcb798db22c8be2c562b533a6d/file_structure.png)
